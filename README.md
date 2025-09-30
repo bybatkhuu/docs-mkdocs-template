@@ -93,8 +93,11 @@ git clone git@github.com:bybatkhuu/docs-mkdocs-template.git && \
 ```sh
 # Install 'mkdocs-material' and other dependencies:
 pip install -r ./requirements.txt
+
 # Or for DEVELOPMENT (with extra dependencies):
 pip install -r ./requirements/requirements.dev.txt
+# Install pre-commit hooks:
+pre-commit install
 ```
 
 ### 4. 🏁 Run the documentation server locally (for DEVELOPMENT)
