@@ -33,6 +33,7 @@ main()
 {
 	## --- Menu arguments --- ##
 	if [ -n "${1:-}" ]; then
+		local _input
 		for _input in "${@:-}"; do
 			case ${_input} in
 				-c | --disable-clean)
@@ -58,6 +59,7 @@ main()
 		fi
 	fi
 
+	local _major_minor_version
 	if [ "${_IS_PUBLISH}" == true ]; then
 		echo "[INFO]: Publishing documentation pages to the GitHub Pages..."
 		# mkdocs gh-deploy --force
