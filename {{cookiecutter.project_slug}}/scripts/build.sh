@@ -1,21 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 
 ## --- Base --- ##
-# Getting path of this script file:
-_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+_SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-"$0"}")" >/dev/null 2>&1 && pwd -P)"
 _PROJECT_DIR="$(cd "${_SCRIPT_DIR}/.." >/dev/null 2>&1 && pwd)"
 cd "${_PROJECT_DIR}" || exit 2
 
 
-if [ -z "$(which mkdocs)" ]; then
-	echo "[ERROR]: 'mkdocs' not found or not installed!"
+if ! command -v mkdocs >/dev/null 2>&1; then
+	echo "[ERROR]: Not found 'mkdocs' command, please install it first!" >&2
 	exit 1
 fi
 
-if [ -z "$(which mike)" ]; then
-	echo "[ERROR]: 'mike' not found or not installed!"
+if ! command -v mike >/dev/null 2>&1; then
+	echo "[ERROR]: Not found 'mike' command, please install it first!" >&2
 	exit 1
 fi
 ## --- Base --- ##
@@ -28,37 +27,61 @@ _IS_PUBLISH=false
 ## --- Variables --- ##
 
 
+## --- Menu arguments --- ##
+_usage_help() {
+	cat <<EOF
+USAGE: ${0} [options]
+
+OPTIONS:
+    -c, --disable-clean    Disable clean step. Default: true
+    -p, --publish          Enable publish step. Default: false
+    -h, --help             Show this help message.
+
+EXAMPLES:
+    ${0} -p -c
+    ${0} --publish
+EOF
+}
+
+while [ $# -gt 0 ]; do
+	case "${1}" in
+		-b | --build)
+			_IS_BUILD=true
+			shift;;
+		-p | --publish)
+			_IS_PUBLISH=true
+			shift;;
+		-c | --disable-clean)
+			_IS_CLEAN=false
+			shift;;
+		-h | --help)
+			_usage_help
+			exit 0;;
+		*)
+			echo "[ERROR]: Failed to parse argument -> ${1}!" >&2
+			_usage_help
+			exit 1;;
+	esac
+done
+## --- Menu arguments --- ##
+
+
+if [ "${_IS_PUBLISH}" == true ]; then
+	if ! command -v git >/dev/null 2>&1; then
+		echo "[ERROR]: Not found 'git' command, please install it first!" >&2
+		exit 1
+	fi
+
+	if [ ! -f ./scripts/get-version.sh ]; then
+		echo "[ERROR]: 'get-version.sh' script not found!" >&2
+		exit 1
+	fi
+fi
+
+
 ## --- Main --- ##
 main()
 {
-	## --- Menu arguments --- ##
-	if [ -n "${1:-}" ]; then
-		local _input
-		for _input in "${@:-}"; do
-			case ${_input} in
-				-c | --disable-clean)
-					_IS_CLEAN=false
-					shift;;
-				-p | --publish)
-					_IS_PUBLISH=true
-					shift;;
-				*)
-					echo "[ERROR]: Failed to parsing input -> ${_input}!"
-					echo "[INFO]: USAGE: ${0}  -c, --disable-clean | -p, --publish"
-					exit 1;;
-			esac
-		done
-	fi
-	## --- Menu arguments --- ##
-
-
-	if [ "${_IS_PUBLISH}" == true ]; then
-		if [ -z "$(which git)" ]; then
-			echo "[ERROR]: 'git' not found or not installed!"
-			exit 1
-		fi
-	fi
-
 	local _major_minor_version
 	if [ "${_IS_PUBLISH}" == true ]; then
 		echo "[INFO]: Publishing documentation pages to the GitHub Pages..."
@@ -69,6 +92,11 @@ main()
 		mike set-default -p latest
 
 		if [ "${_IS_CLEAN}" == true ]; then
+			if [ ! -f ./scripts/clean.sh ]; then
+				echo "[ERROR]: 'clean.sh' script not found!" >&2
+				exit 1
+			fi
+
 			./scripts/clean.sh || exit 2
 		fi
 	else
@@ -82,5 +110,5 @@ main()
 	echo "[OK]: Done."
 }
 
-main "${@:-}"
+main
 ## --- Main --- ##
