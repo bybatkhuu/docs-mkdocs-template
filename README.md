@@ -51,7 +51,7 @@ cd ~/workspaces/projects
 **OPTION A.** Clone the repository:
 
 ```sh
-git clone https://github.com/bybatkhuu/docs-mkdocs-template.git && \
+git clone https://github.com/[OWNER]/docs-mkdocs-template.git && \
     cd docs-mkdocs-template && \
     git checkout cookiecutter
 ```
@@ -59,7 +59,7 @@ git clone https://github.com/bybatkhuu/docs-mkdocs-template.git && \
 **OPTION B.** Clone the repository (for **DEVELOPMENT**: git + ssh key):
 
 ```sh
-git clone git@github.com:bybatkhuu/docs-mkdocs-template.git && \
+git clone git@github.com:[OWNER]/docs-mkdocs-template.git && \
     cd docs-mkdocs-template && \
     git checkout cookiecutter
 ```

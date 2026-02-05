@@ -23,7 +23,7 @@ fi
 ## --- Main --- ##
 echo "[INFO]: Starting documentation server..."
 #shellcheck disable=SC2086
-mkdocs serve -a 0.0.0.0:${DOCS_PORT:-8000}
+mkdocs serve -a 0.0.0.0:${DOCS_PORT:-8000} --livereload
 # mike serve -a 0.0.0.0:${DOCS_PORT:-8000}
 echo "[OK]: Done."
 ## --- Main --- ##
