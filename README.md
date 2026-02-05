@@ -103,7 +103,7 @@ pre-commit install
 ### 4. 🏁 Run the documentation server locally (for DEVELOPMENT)
 
 ```sh
-mkdocs serve -a 0.0.0.0:8000
+mkdocs serve -a 0.0.0.0:8000 --livereload
 # Or:
 ./scripts/docs.sh
 ```

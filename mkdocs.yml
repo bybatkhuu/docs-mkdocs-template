@@ -86,11 +86,11 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.arithmatex:
-      generic: true
-extra_javascript:
-  - assets/js/mathjax.js
-  - assets/js/tex-mml-chtml.js
+#   - pymdownx.arithmatex:
+#       generic: true
+# extra_javascript:
+#   - assets/js/mathjax.js
+#   - assets/js/tex-mml-chtml.js
 plugins:
   - meta
   - tags
@@ -133,4 +133,4 @@ extra:
       link: https://x.com/bybatkhuu
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/bybatkhuu
-copyright: Copyright &copy; 2025 - Batkhuu Byambajav
+copyright: Copyright &copy; 2026 - Batkhuu Byambajav
