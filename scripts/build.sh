@@ -22,7 +22,7 @@ fi
 
 ## --- Variables --- ##
 # Flags:
-_IS_CLEAN=true
+_IS_CLEAN=false
 _IS_PUBLISH=false
 ## --- Variables --- ##
 
@@ -33,9 +33,9 @@ _usage_help() {
 USAGE: ${0} [options]
 
 OPTIONS:
-    -c, --disable-clean    Disable clean step. Default: true
-    -p, --publish          Enable publish step. Default: false
-    -h, --help             Show this help message.
+    -c, --enable-clean    Enable clean step. Default: false
+    -p, --publish         Enable publish step. Default: false
+    -h, --help            Show this help message.
 
 EXAMPLES:
     ${0} -p -c
@@ -45,14 +45,11 @@ EOF
 
 while [ $# -gt 0 ]; do
 	case "${1}" in
-		-b | --build)
-			_IS_BUILD=true
-			shift;;
 		-p | --publish)
 			_IS_PUBLISH=true
 			shift;;
-		-c | --disable-clean)
-			_IS_CLEAN=false
+		-c | --enable-clean)
+			_IS_CLEAN=true
 			shift;;
 		-h | --help)
 			_usage_help
@@ -85,11 +82,11 @@ main()
 	local _major_minor_version
 	if [ "${_IS_PUBLISH}" == true ]; then
 		echo "[INFO]: Publishing documentation pages to the GitHub Pages..."
-		# mkdocs gh-deploy --force
+		# mkdocs gh-deploy --force || exit 2
 
 		_major_minor_version="$(./scripts/get-version.sh | cut -d. -f1-2)"
-		mike deploy -p -u "${_major_minor_version}" latest
-		mike set-default -p latest
+		mike deploy -p -u "${_major_minor_version}" latest || exit 2
+		mike set-default -p latest || exit 2
 
 		if [ "${_IS_CLEAN}" == true ]; then
 			if [ ! -f ./scripts/clean.sh ]; then
@@ -101,11 +98,11 @@ main()
 		fi
 	else
 		echo "[INFO]: Building documentation pages (HTML) into the 'site' directory..."
-		mkdocs build
+		mkdocs build || exit 2
 
 		# _major_minor_version="$(./scripts/get-version.sh | cut -d. -f1-2)"
-		# mike deploy -u "${_major_minor_version}" latest
-		# mike set-default latest
+		# mike deploy -u "${_major_minor_version}" latest || exit 2
+		# mike set-default latest || exit 2
 	fi
 	echo "[OK]: Done."
 }
