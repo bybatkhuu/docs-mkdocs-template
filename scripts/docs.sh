@@ -8,6 +8,10 @@ _PROJECT_DIR="$(cd "${_SCRIPT_DIR}/.." >/dev/null 2>&1 && pwd)"
 cd "${_PROJECT_DIR}" || exit 2
 
 
+# shellcheck disable=SC1091
+[ -f .env ] && . .env
+
+
 if ! command -v mkdocs >/dev/null 2>&1; then
 	echo "[ERROR]: Not found 'mkdocs' command, please install it first!" >&2
 	exit 1
@@ -23,7 +27,7 @@ fi
 ## --- Main --- ##
 echo "[INFO]: Starting documentation server..."
 #shellcheck disable=SC2086
-mkdocs serve -a 0.0.0.0:${DOCS_PORT:-8000} --livereload
-# mike serve -a 0.0.0.0:${DOCS_PORT:-8000}
+mkdocs serve -a 0.0.0.0:${DOCS_PORT:-8000} --livereload || exit 2
+# mike serve -a 0.0.0.0:${DOCS_PORT:-8000} || exit 2
 echo "[OK]: Done."
 ## --- Main --- ##
