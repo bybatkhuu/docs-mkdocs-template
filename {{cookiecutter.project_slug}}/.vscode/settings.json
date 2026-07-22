@@ -148,7 +148,6 @@
 		"**/Thumbs.db": true,
 		"**/docs/assets/js/*.js": true
 	},
-	"python.languageServer": "Pylance",
 	"yaml.schemas": {
 		"https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
 	},
